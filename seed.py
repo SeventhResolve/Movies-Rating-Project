@@ -3,7 +3,7 @@
 from sqlalchemy import func
 from model import User
 # from model import Rating
-# from model import Movie
+from model import Movie
 
 from model import connect_to_db, db
 from server import app
@@ -37,6 +37,28 @@ def load_users():
 def load_movies():
     """Load movies from u.item into database."""
 
+    print "Movies"
+
+    # Like User.query.delete() in the function load_users()
+    Movie.query.delete()
+
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+        all_movie_fields = row.split("|")
+        movie_id, movie_title, release_date, video_release_date, imdb_url = all_movie_fields[:5]
+
+        movie = Movie(movie_id=movie_id,
+                        movie_title=movie_title,
+                        release_date=release_date,
+                        video_release_date=video_release_date,
+                        imdb_url=imdb_url)
+
+        db.session.add(movie)
+
+    db.session.commit()
+ 
+
+
 
 def load_ratings():
     """Load ratings from u.data into database."""
@@ -66,3 +88,5 @@ if __name__ == "__main__":
     load_movies()
     load_ratings()
     set_val_user_id()
+
+load_movies()
