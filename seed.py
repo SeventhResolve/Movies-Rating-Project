@@ -7,7 +7,7 @@ from model import Movie
 
 from model import connect_to_db, db
 from server import app
-
+from datetime import datetime
 
 def load_users():
     """Load users from u.user into database."""
@@ -42,15 +42,25 @@ def load_movies():
     # Like User.query.delete() in the function load_users()
     Movie.query.delete()
 
+    # import pdb; pdb.set_trace()
+
     for row in open("seed_data/u.item"):
         row = row.rstrip()
         all_movie_fields = row.split("|")
         movie_id, movie_title, release_date, video_release_date, imdb_url = all_movie_fields[:5]
 
+        formatted_movie_title = movie_title.split("(")
+        formatted_movie_title = formatted_movie_title[0]
+       
+
+        if release_date:
+            formatted_release_date = datetime.strptime(release_date, "%d-%b-%Y")
+        else:
+            formatted_release_date = None
+
         movie = Movie(movie_id=movie_id,
-                        movie_title=movie_title,
-                        release_date=release_date,
-                        video_release_date=video_release_date,
+                        title=formatted_movie_title,
+                        released_at=formatted_release_date,
                         imdb_url=imdb_url)
 
         db.session.add(movie)
@@ -62,7 +72,7 @@ def load_movies():
 
 def load_ratings():
     """Load ratings from u.data into database."""
-
+    pass
 
 def set_val_user_id():
     """Set value for the next user_id after seeding database"""
@@ -88,5 +98,3 @@ if __name__ == "__main__":
     load_movies()
     load_ratings()
     set_val_user_id()
-
-load_movies()
