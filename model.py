@@ -51,8 +51,13 @@ class Rating(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'), nullable=False)
     # Good idea to build foreign key into the db.Column. Foreign key takes the parameter of the string
     # "tablename.fieldname"
+    # ***Don't forget to add db.relationship into both classes***
+
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     score = db.Column(db.Integer, nullable=False)
+
+    bridge_movies_to_rating = db.relationship('Movie')
+    bridge_user_to_ratings = db.relationship('User')
 
 ##############################################################################
 # Helper functions
