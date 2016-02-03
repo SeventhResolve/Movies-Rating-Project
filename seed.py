@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 from model import User
-# from model import Rating
+from model import Rating
 from model import Movie
 
 from model import connect_to_db, db
@@ -42,8 +42,6 @@ def load_movies():
     # Like User.query.delete() in the function load_users()
     Movie.query.delete()
 
-    # import pdb; pdb.set_trace()
-
     for row in open("seed_data/u.item"):
         row = row.rstrip()
         all_movie_fields = row.split("|")
@@ -51,7 +49,9 @@ def load_movies():
 
         formatted_movie_title = movie_title.split("(")
         formatted_movie_title = formatted_movie_title[0]
-       
+        
+        if movie_title == "":
+            continue
 
         if release_date:
             formatted_release_date = datetime.strptime(release_date, "%d-%b-%Y")
@@ -72,7 +72,25 @@ def load_movies():
 
 def load_ratings():
     """Load ratings from u.data into database."""
-    pass
+    
+    print "Ratings"
+
+    # Like User.query.delete() in the function load_users()
+    Rating.query.delete()
+
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        all_rating_fields = row.split("\t")
+        
+        user_id, movie_id, score, timestamp = all_rating_fields
+
+        rating = Rating(movie_id=int(movie_id),
+                        user_id=int(user_id),
+                        score=int(score))
+
+        db.session.add(rating)
+
+    db.session.commit()
 
 def set_val_user_id():
     """Set value for the next user_id after seeding database"""
