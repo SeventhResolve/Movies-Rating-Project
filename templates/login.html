@@ -1,0 +1,34 @@
+<!-- Build form that has user and password.
+
+Redirect back to homepage.
+Flash "logged in" (might need to be added into base.html) -->
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    <h2>Returning Users</h2>
+    <form action="/login_returning_user" method="GET">
+        <label> Username (E-Mail)
+            <input type="text" name='username'>
+        </label><br>
+        <label>Enter Password
+            <input type="text" name='password'>
+        </label><br>
+        <input type="submit" value="Login!">
+    </form>
+</div>
+
+<div>
+    <h2>Create New User</h2>
+       <form action="/add_new_user" method="POST">
+        <label> Username (E-Mail)
+            <input type="text" name='username'>
+        </label><br>
+        <label>Enter Password
+            <input type="text" name='password'>
+        </label><br>
+        <input type="submit" value="Login!">
+    </form>
+</div>
+
+{% endblock %}
