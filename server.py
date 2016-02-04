@@ -5,7 +5,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db
+from model import connect_to_db, db, User, Rating, Movie
 
 
 app = Flask(__name__)
@@ -24,15 +24,37 @@ def index():
 
     return render_template("homepage.html")
 
+
 @app.route("/users")
 def user_list():
     """Show list of users"""
 
+    # users = db.session.query(User)
     users = User.query.all()
+
+    print users[0].email
+
     return render_template("user_list.html", users=users)
 
+
 @app.route("/login")
+def login_form():
     """Show login form"""
+
+    return render_template("login.html")
+
+
+@app.route("/check_login")
+def check_login():
+    """ """
+    username = request.args.get("username")
+    password = request.args.get("password")
+
+    print username
+    print password
+
+    # return "HI!"
+
 ###!!! LOOK HERE: Build login route here. Direct over to login.html
 
 
