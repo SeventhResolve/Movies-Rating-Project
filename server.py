@@ -32,7 +32,7 @@ def user_list():
     # users = db.session.query(User)
     users = User.query.all()
 
-    print users[0].email
+    # print users[0].email
 
     return render_template("user_list.html", users=users)
 
@@ -43,19 +43,34 @@ def login_form():
 
     return render_template("login.html")
 
-
-@app.route("/check_login")
+############## need to test method
+@app.route("/login_returning_user")
 def check_login():
-    """ """
+    """ Check credentials, return to login page if creds do not match"""
+    
     username = request.args.get("username")
     password = request.args.get("password")
 
+    return render_template("login.html")
+
+@app.route("/add_new_user", methods=["POST"])
+def add_user():
+    """Add new user (email and password) to database"""
+
+    username = request.form.get("username")
+    password = request.form.get("password")
     print username
     print password
 
-    # return "HI!"
+    new_user = User(email=username,
+                    password=password)
 
-###!!! LOOK HERE: Build login route here. Direct over to login.html
+    print new_user
+    db.session.add(new_user)
+    db.session.commit()
+    
+    return render_template("login.html")
+
 
 
 if __name__ == "__main__":
