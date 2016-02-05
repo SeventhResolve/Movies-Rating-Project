@@ -43,7 +43,7 @@ def login_form():
 
     return render_template("login.html")
 
-############## need to test method
+
 @app.route("/login_returning_user")
 def check_login():
     """ Check credentials, return to login page if creds do not match"""
@@ -51,24 +51,29 @@ def check_login():
     username = request.args.get("username")
     password = request.args.get("password")
 
+    q = User.query.filter(User.email == username).one()
+    
+    # if user is in db, then flash "logged in" & redirect to homepage
+    # if user is not in db, redirect to homepage and flash "invalid login"
+
+
     return render_template("login.html")
 
+# need to add message flashing
 @app.route("/add_new_user", methods=["POST"])
 def add_user():
     """Add new user (email and password) to database"""
 
     username = request.form.get("username")
     password = request.form.get("password")
-    print username
-    print password
 
     new_user = User(email=username,
                     password=password)
 
-    print new_user
     db.session.add(new_user)
     db.session.commit()
-    
+
+    flash('Logged in')
     return render_template("login.html")
 
 
