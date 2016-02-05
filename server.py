@@ -50,14 +50,23 @@ def check_login():
     
     username = request.args.get("username")
     password = request.args.get("password")
-
-    q = User.query.filter(User.email == username).one()
     
+    search_user_in_db = User.query.filter(User.email == username).first()
+
+    print search_user_in_db
+
+    if search_user_in_db and (search_user_in_db.password == password):
+        flash('Logged in')
+        return redirect("/")
+    else:
+        flash ('Invalid login')
+        return redirect('/login')
+
     # if user is in db, then flash "logged in" & redirect to homepage
-    # if user is not in db, redirect to homepage and flash "invalid login"
+    # if user is not in db, redirect to login page and flash "invalid login"
 
-
-    return render_template("login.html")
+    # flash('Logged in')
+    # return render_template("login.html")
 
 # need to add message flashing
 @app.route("/add_new_user", methods=["POST"])
@@ -74,7 +83,7 @@ def add_user():
     db.session.commit()
 
     flash('Logged in')
-    return render_template("login.html")
+    return redirect("/")
 
 
 
